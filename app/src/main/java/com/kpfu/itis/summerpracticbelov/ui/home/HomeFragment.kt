@@ -89,7 +89,7 @@ class HomeFragment : Fragment() {
 
             val mortgage: Double = (age.toDouble() * 1000).toDouble() // Example calculation for mortgage
 
-            val horoscope = "Гороскоп какой-то" // Example calculation for horoscope
+            val horoscope = "Гороскоп у " + name + " какой-то" // Example calculation for horoscope
 
             val ndfl: Double = (weight.toDouble() / height.toDouble()).toDouble() // Ex
 
