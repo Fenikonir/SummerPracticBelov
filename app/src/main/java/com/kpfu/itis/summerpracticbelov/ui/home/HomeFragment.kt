@@ -30,12 +30,12 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         val homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
+            ViewModelProvider(this).get(HomeViewModel::class.java)
 
 
 
@@ -68,17 +68,23 @@ class HomeFragment : Fragment() {
             val maxAge = 150
             val minAge = 0
 
-            if (height.isNotEmpty() && height.toDouble() > maxHeight) {
+            if (name.isEmpty()) {
+                editTextName.error = "Неверный ввод"
+                return@setOnClickListener
+            }
+
+
+            if (height.isEmpty() || (height.isNotEmpty() && height.toDouble() > maxHeight)) {
                 editTextHeight.error = "Неверный Рост"
                 return@setOnClickListener
             }
 
-            if (weight.isNotEmpty() && weight.toDouble() > maxHeight) {
+            if (height.isEmpty() || (weight.isNotEmpty() && weight.toDouble() > maxHeight)) {
                 editTextWeight.error = "Неверный  Вес"
                 return@setOnClickListener
             }
 
-            if (age.isNotEmpty() && age.toInt() > maxAge) {
+            if (height.isEmpty() || (age.isNotEmpty() && age.toInt() > maxAge)) {
                 editTextAge.error = "Неверный Возраст"
                 return@setOnClickListener
             }
