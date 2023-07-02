@@ -1,107 +1,63 @@
 package com.kpfu.itis.summerpracticbelov.ui.home
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.kpfu.itis.summerpracticbelov.databinding.FragmentHomeBinding
+import androidx.navigation.fragment.findNavController
+import com.kpfu.itis.summerpracticbelov.PlanetRepository
+import com.kpfu.itis.summerpracticbelov.R
 
 
 class HomeFragment : Fragment() {
-
-    private lateinit var button: Button
-    private lateinit var editTextName: EditText
-    private lateinit var editTextHeight: EditText
-    private lateinit var editTextWeight: EditText
-    private lateinit var editTextAge: EditText
-    private lateinit var resultText: TextView
-
-    private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var planetListView: ListView
+    private lateinit var planetListAdapter: ArrayAdapter<String>
+    private lateinit var planetNames: List<String>
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        planetListView = view.findViewById(R.id.planetListView)
+
+        val bundle = Bundle()
 
 
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        button = binding.button;
-        editTextName = binding.editTextName
-        editTextHeight = binding.editTextHeight
-        editTextWeight = binding.editTextWeight
-        editTextAge = binding.editTextAge
-        resultText = binding.resultText
+        planetNames = PlanetRepository.getPlanetsName()
+
+        planetListAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, planetNames)
+        planetListView.adapter = planetListAdapter
+
+        planetListView.setOnItemClickListener { _, _, position, _ ->
 
 
-        return root
-    }
+            val planetName = planetNames[position]
 
-    @SuppressLint("SetTextI18n")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+            val planetId = when (planetName) {
+                "Меркурий" -> 1
+                "Венера" -> 2
+                "Земля" -> 3
+                "Марс" -> 4
+                "Юпитер" -> 5
+                "Сатурн" -> 6
+                "Уран" -> 7
+                "Нептун" -> 8
+                else -> 0
 
-        button.setOnClickListener {
-            val name = editTextName.text.toString()
-            val height = editTextHeight.text.toString()
-            val weight = editTextWeight.text.toString()
-            val age = editTextAge.text.toString()
-
-            val maxHeight = 250
-            val minHeight = 0
-            val maxAge = 150
-            val minAge = 0
-
-            if (height.isNotEmpty() && height.toDouble() > maxHeight) {
-                editTextHeight.error = "Неверный Рост"
-                return@setOnClickListener
             }
-
-            if (weight.isNotEmpty() && weight.toDouble() > maxHeight) {
-                editTextWeight.error = "Неверный  Вес"
-                return@setOnClickListener
-            }
-
-            if (age.isNotEmpty() && age.toInt() > maxAge) {
-                editTextAge.error = "Неверный Возраст"
-                return@setOnClickListener
-            }
-
-            val calories: Double = (weight.toDouble() * 10).toDouble() // Калории
-
-            val nds: Double = (weight.toDouble() * height.toDouble())// НДС
-
-            val mortgage: Double = (age.toDouble() * 1000).toDouble() // Example calculation for mortgage
-
-            val horoscope = "Гороскоп у " + name + " какой-то" // Example calculation for horoscope
-
-            val ndfl: Double = (weight.toDouble() / height.toDouble()).toDouble() // Ex
-
-            val message = "Результат\nКалории: $calories\nНДС: $nds\nMortgage: $mortgage\nГороскоп: $horoscope\nНДФЛ: $ndfl"
-            resultText.text = message
-            resultText.visibility = VISIBLE
-
+            bundle.putInt("PLANET", planetId)
+            findNavController().navigate(R.id.navigation_dashboard, bundle)
         }
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        return view
     }
 }
+
+
